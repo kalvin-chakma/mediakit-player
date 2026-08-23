@@ -36,10 +36,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kalvin-chakma/custom-video-player.git"
+    "url": "git+https://github.com/kalvin-chakma/mediakit-player.git"
   },
-  "homepage": "https://github.com/kalvin-chakma/custom-video-player#readme",
-  "bugs": "https://github.com/kalvin-chakma/custom-video-player/issues",
+  "homepage": "https://github.com/kalvin-chakma/mediakit-player#readme",
+  "bugs": "https://github.com/kalvin-chakma/mediakit-player/issues",
   "peerDependencies": {
     "react": ">=17",
     "react-dom": ">=17"
