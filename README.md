@@ -8,6 +8,7 @@ A headless, composable React video/audio player. `mediakit-player` gives you a `
 
 ## Features
 
+- **Looks right out of the box** — the components render fully styled the moment you import them, no CSS import and no Tailwind setup required in your app
 - **Composable** — build your own control bar from small primitives instead of fighting a monolithic `<VideoPlayer />`
 - **Full playback control** — play/pause, seek, volume/mute, playback rate, duration/remaining time toggle
 - **Picture-in-picture & fullscreen** built in
@@ -15,7 +16,7 @@ A headless, composable React video/audio player. `mediakit-player` gives you a `
 - **Hover scrubbing preview** on the seek bar
 - **Video and audio** via the same `<Media.Provider>` context
 - **Fully typed** — ships its own `.d.ts` files, no `@types` package needed
-- **Tree-shakeable** ESM + CJS builds via `tsup`, `"sideEffects": false`
+- **Tree-shakeable** ESM + CJS builds via `tsup` — unused components are still dropped by your bundler; only the stylesheet is marked as a side effect so it survives
 
 ## Installation
 
@@ -38,6 +39,8 @@ npm install react react-dom
 ```
 
 ## Quick start
+
+Just import and compose the pieces you want — the package's styles load automatically the moment you import it, no CSS import and no Tailwind setup required in your app:
 
 ```tsx
 "use client";
@@ -77,7 +80,15 @@ export default function Player() {
 }
 ```
 
-Everything under `<Media.Provider>` shares playback state through React context, so you can rearrange, omit, or restyle any control without touching the others.
+Everything under `<Media.Provider>` shares playback state through React context, so you can rearrange, omit, or restyle any control without touching the others — skip `<Media.Captions />`, drop a `<Media.Group>`, whatever your layout needs; the rest keeps working and keeps its default look. Every component still accepts `className` and forwards remaining DOM props, so overriding the look with your own Tailwind, CSS Modules, or plain CSS works too.
+
+### How the styling works
+
+`mediakit-player`'s entry point has a built-in `import "./index.css"`, so any bundler-based app (Next.js, Vite, Create React App, etc.) that imports from `mediakit-player` picks up its stylesheet automatically and extracts a real `<link>` at build time — nothing for you to import. If you're in an environment without a bundler processing CSS from `node_modules` (a bare Node script, or Jest without a CSS transform configured), either add a CSS mock for your test runner (e.g. Jest's `moduleNameMapper` pointing `\.css$` at `identity-obj-proxy`) or fall back to importing the stylesheet explicitly:
+
+```tsx
+import "mediakit-player/style.css";
+```
 
 ## Audio
 
@@ -120,7 +131,7 @@ import { Media, Audio } from "mediakit-player";
 | `Media.PictureInPicture`    | Toggles native picture-in-picture                                        |
 | `Media.Fullscreen`          | Toggles fullscreen on `Media.View`                                       |
 
-Every component accepts `className` and forwards remaining DOM props, so styling with Tailwind, CSS Modules, or plain CSS all work.
+`Media.View`, `Media.Controls`, `Media.ControlBar`, `Media.Group`, `Media.TimeGroup`, `Video`, and `Audio` accept `className` and forward remaining DOM props, so styling those with Tailwind, CSS Modules, or plain CSS works. The individual controls (`PlayButton`, `SeekBar`, `Time`, `Duration`, `Volume`, `Captions`, `PlaybackRate`, `PictureInPicture`, `Fullscreen`, `Title`) don't accept `className` or props yet — restyling them currently means overriding their built-in classes globally.
 
 ## `useMedia()`
 

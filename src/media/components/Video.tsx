@@ -15,7 +15,7 @@ export interface VideoProps extends Omit<VideoHTMLAttributes<HTMLVideoElement>, 
   src: string;
 }
 
-export default function Video({ src, className = "", ...props }: VideoProps) {
+export default function Video({ src, className = "", preload = "auto", ...props }: VideoProps) {
   const { attachMedia, togglePlay, seekBy } = useMedia();
   const elementRef = useRef<HTMLVideoElement | null>(null);
   const clickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -80,9 +80,14 @@ export default function Video({ src, className = "", ...props }: VideoProps) {
       <video
         ref={elementRef}
         src={src}
+        preload={preload}
         className={`w-full h-full aspect-video object-cover ${className}`}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
+        // Browser extensions (ad blockers, download helpers, etc.) commonly
+        // inject attributes onto <video> elements before React hydrates,
+        // which otherwise trips a false-positive hydration mismatch warning.
+        suppressHydrationWarning
         {...props}
       />
 

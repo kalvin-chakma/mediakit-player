@@ -1,3 +1,4 @@
+import "./index.css";
 import { MediaProvider } from "./media/context";
 import { useMedia } from "./media/hooks";
 import {

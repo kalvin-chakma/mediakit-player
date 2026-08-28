@@ -1,6 +1,6 @@
 {
   "name": "mediakit-player",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Custom React video/audio player with captions, playback rate, picture-in-picture, fullscreen, and volume controls.",
   "license": "MIT",
   "author": "Kalvin Chakma",
@@ -8,7 +8,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/index.css"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -17,13 +19,15 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./style.css": "./dist/index.css"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && npm run build:css",
+    "build:css": "tailwindcss -i ./src/styles.css -o ./dist/index.css --minify",
     "dev": "tsup --watch",
     "prepublishOnly": "npm run build"
   },
@@ -49,10 +53,12 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "tailwindcss": "^4.3.3",
     "tsup": "^8.3.5",
     "typescript": "^5"
   }

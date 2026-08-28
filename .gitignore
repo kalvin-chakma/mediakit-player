@@ -18,7 +18,9 @@ node_modules/
 /dist
 
 # local dev/test playground - never published or committed
-/example
+/example-nextjs
+/example-react
+
 
 # misc
 .DS_Store

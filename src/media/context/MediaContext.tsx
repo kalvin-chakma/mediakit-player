@@ -40,6 +40,11 @@ export function MediaProvider({ children }: { children: ReactNode }) {
       setCurrentTime(mediaElement.currentTime);
       setDuration(mediaElement.duration || 0);
     };
+    // "timeupdate" (and so the duration it also reports) doesn't fire until
+    // playback actually starts. Tracking duration separately from these means
+    // consumers relying on it before the user hits play — the buffered range,
+    // remaining time, etc. — have a real value as soon as metadata loads.
+    const handleDurationChange = () => setDuration(mediaElement.duration || 0);
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
     const handleEnded = () => setIsPlaying(false);
@@ -50,17 +55,22 @@ export function MediaProvider({ children }: { children: ReactNode }) {
     const handleRateChange = () => setPlaybackRateState(mediaElement.playbackRate);
 
     mediaElement.addEventListener("timeupdate", handleTimeUpdate);
+    mediaElement.addEventListener("loadedmetadata", handleDurationChange);
+    mediaElement.addEventListener("durationchange", handleDurationChange);
     mediaElement.addEventListener("play", handlePlay);
     mediaElement.addEventListener("pause", handlePause);
     mediaElement.addEventListener("ended", handleEnded);
     mediaElement.addEventListener("volumechange", handleVolumeChange);
     mediaElement.addEventListener("ratechange", handleRateChange);
 
+    handleDurationChange();
     handleVolumeChange();
     handleRateChange();
 
     return () => {
       mediaElement.removeEventListener("timeupdate", handleTimeUpdate);
+      mediaElement.removeEventListener("loadedmetadata", handleDurationChange);
+      mediaElement.removeEventListener("durationchange", handleDurationChange);
       mediaElement.removeEventListener("play", handlePlay);
       mediaElement.removeEventListener("pause", handlePause);
       mediaElement.removeEventListener("ended", handleEnded);
